@@ -21,9 +21,6 @@ function Navbar() {
           <Link to="/about" className="hover:text-blue-200 transition-colors">
             About
           </Link>
-          <Link to="/footer" className="hover:text-blue-200 transition-colors">
-            Footer
-          </Link>
         </div>
       </nav>
     </header>

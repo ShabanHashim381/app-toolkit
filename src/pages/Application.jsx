@@ -22,7 +22,7 @@ const Application = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-gray-100 text-gray-900 p-8">
+    <div className=" bg-gray-100 text-gray-900 p-8 mt-35">
       <header className="mb-12 text-center">
         <h1 className="text-4xl font-bold mb-2">
           🧰 App <span className="text-blue-400">-</span>
