@@ -51,7 +51,7 @@ const Footer = () => {
         <div className="border-t border-gray-500 pt-4 px-6 flex flex-col sm:flex-row justify-between text-sm text-gray-200">
           <span>App.Toolkit. All rights reserved.</span>
           <span className="text-right text-cyan-300">
-            Design by Shaban Hashim 381
+            Designed by Shaban Hashim 381
           </span>
         </div>
       </div>
