@@ -22,13 +22,13 @@ const Application = () => {
   const navigate = useNavigate();
 
   return (
-    <div className=" bg-gray-100 text-gray-900 p-8 mt-35">
+    <div className=" bg-gray-500 text-gray-900 p-8 mt-35">
       <header className="mb-12 text-center">
         <h1 className="text-4xl font-bold mb-2">
           🧰 App <span className="text-blue-400">-</span>
           <span className="text-blue-400"> Toolkit.</span>
         </h1>
-        <p className="text-lg text-gray-600">
+        <p className="text-lg text-gray-300">
           A collection of totally necessary apps you didn’t know you needed.
         </p>
       </header>

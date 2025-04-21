@@ -21,7 +21,7 @@ const Homepage = () => {
   const controls = useAnimation();
 
   useEffect(() => {
-    controls.start((i) => "visible");
+    controls.start("visible");
   }, [controls]);
 
   return (

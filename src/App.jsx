@@ -1,4 +1,5 @@
 import React from "react";
+import "react-datepicker/dist/react-datepicker.css";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Homepage from "./pages/Homepage";
 import Application from "./pages/Application";
@@ -9,11 +10,11 @@ import { TodoProvider } from "./context/TodoContext";
 import { CounterProvider } from "./context/CounterContext";
 import { EcommerceProvider } from "./context/EcommerceContext";
 
-import TodoApp from "./components/Todo/TodoApp";
+import TodoApp from "./TodoApp";
 import CounterApp from "./components/Counter/CounterApp";
-import EcommerceApp from "./components/Ecommerce/EcommerceApp";
 import About from "./components/Layouts/About";
 import Footer from "./components/layouts/Footer";
+import EcommerceApp from "./components/Ecommerce/EcommerceApp";
 
 const App = () => {
   return (

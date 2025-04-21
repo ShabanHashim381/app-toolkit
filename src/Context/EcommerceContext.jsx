@@ -4,7 +4,7 @@ const EcommerceContext = createContext();
 
 export const useEcommerce = () => useContext(EcommerceContext);
 
-const sampleProducts = [
+const products = [
   { id: 1, name: "Product One", price: 49.99 },
   { id: 2, name: "Product Two", price: 89.99 },
   { id: 3, name: "Product Three", price: 29.99 },
@@ -12,7 +12,6 @@ const sampleProducts = [
 
 export const EcommerceProvider = ({ children }) => {
   const [cart, setCart] = useState([]);
-  const [products] = useState(sampleProducts);
 
   const addToCart = (product) => {
     setCart((prev) => [...prev, product]);

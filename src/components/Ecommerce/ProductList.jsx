@@ -1,8 +1,8 @@
 import React from "react";
 import { useEcommerce } from "../../context/EcommerceContext";
 
-const ProductList = () => {
-  const { products, addToCart } = useEcommerce();
+const ProductList = ({ products }) => {
+  const { addToCart } = useEcommerce();
 
   return (
     <div>
