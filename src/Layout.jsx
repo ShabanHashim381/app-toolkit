@@ -1,7 +1,7 @@
 import React from "react";
-import Sidebar from "./Sidebar";
-import Footer from "./Footer";
 import Navbar from "./Navbar";
+import { Sidebar } from "lucide-react";
+import Footer from "./components/layouts/Footer";
 
 const Layout = ({ children }) => {
   return (

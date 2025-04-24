@@ -1,5 +1,7 @@
 import React from "react";
-import { CheckCircle, Circle, Star } from "lucide-react";
+import { format } from "date-fns";
+import { FaStar, FaRegStar } from "react-icons/fa";
+import { MdDelete } from "react-icons/md";
 
 const TodoItem = ({
   todo,
@@ -8,51 +10,49 @@ const TodoItem = ({
   removeTodo,
   sortOption,
 }) => {
-  const displayDate =
-    sortOption === "createdAt"
-      ? `Created: ${new Date(todo.createdAt).toLocaleDateString()}`
-      : sortOption === "dueDate" && todo.dueDate
-      ? `${new Date(todo.dueDate).toLocaleDateString()}`
-      : `${new Date(todo.createdAt).toLocaleDateString()}`;
+  const { id, text, completed, favorite, createdAt, dueDate } = todo;
 
-  const isNew = Date.now() - todo.createdAt < 10000;
+  const getDateLabel = () => {
+    if (sortOption === "dueDate") {
+      return `Due: ${format(new Date(dueDate), "MMM d, yyyy")}`;
+    }
+    return `Created: ${format(new Date(createdAt), "MMM d, yyyy")}`;
+  };
 
   return (
-    <div className="bg-white shadow-sm border border-gray-200 rounded px-4 py-3 flex items-center justify-between">
+    <div
+      className={`flex items-center justify-between border border-gray-400 rounded px-4 py-3 bg-[#2a2a3d] transition-all ${
+        completed ? "opacity-60" : ""
+      }`}
+    >
       <div className="flex items-center gap-3">
-        <button onClick={() => toggleTodo(todo.id)}>
-          {todo.completed ? (
-            <CheckCircle className="text-blue-500" />
-          ) : (
-            <Circle className="text-gray-400" />
-          )}
-        </button>
-        <div>
-          <div className="text-sm flex items-center gap-2">
-            {todo.text}
-            {isNew && (
-              <span className="bg-green-100 text-green-600 text-xs px-2 py-0.5 rounded-full">
-                NEW
-              </span>
-            )}
-          </div>
-          <div className="text-xs text-gray-400">{displayDate}</div>
+        <input
+          type="checkbox"
+          checked={completed}
+          onChange={() => toggleTodo(id)}
+          className="form-checkbox h-5 w-5 accent-purple-500"
+        />
+        <div className="flex flex-col">
+          <span
+            className={`text-base ${
+              completed ? "line-through text-white" : "text-white"
+            }`}
+          >
+            {text}
+          </span>
+          <span className="text-sm text-gray-400">{getDateLabel()}</span>
         </div>
       </div>
-      <div className="flex items-center gap-2">
-        <Star
-          onClick={() => toggleFavorite(todo.id)}
-          className={`cursor-pointer ${
-            todo.favorite
-              ? "text-yellow-400"
-              : "text-gray-300 hover:text-gray-500"
-          }`}
-        />
-        <button
-          onClick={() => removeTodo(todo.id)}
-          className="text-red-400 hover:text-red-600 text-xs"
-        >
-          ❌
+      <div className="flex items-center gap-3">
+        <button onClick={() => toggleFavorite(id)}>
+          {favorite ? (
+            <FaStar className="text-yellow-400" />
+          ) : (
+            <FaRegStar className="text-gray-400" />
+          )}
+        </button>
+        <button onClick={() => removeTodo(id)}>
+          <MdDelete className="text-red-500" />
         </button>
       </div>
     </div>

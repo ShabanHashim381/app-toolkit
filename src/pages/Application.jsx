@@ -1,4 +1,6 @@
-import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import SearchInput from "../components/common/SearchInput";
 
 const tools = [
   {
@@ -20,10 +22,15 @@ const tools = [
 
 const Application = () => {
   const navigate = useNavigate();
+  const [productSearch, setProductSearch] = useState("");
+
+  const filteredTools = tools.filter((tool) =>
+    tool.title.toLowerCase().includes(productSearch.toLowerCase())
+  );
 
   return (
-    <div className=" bg-gray-500 text-gray-900 p-8 mt-35">
-      <header className="mb-12 text-center">
+    <div className="bg-gray-500 text-gray-900 p-8 mt-35">
+      <header className="mb-8 text-center">
         <h1 className="text-4xl font-bold mb-2">
           🧰 App <span className="text-blue-400">-</span>
           <span className="text-blue-400"> Toolkit.</span>
@@ -33,28 +40,35 @@ const Application = () => {
         </p>
       </header>
 
+      <div className="max-w-md mx-auto mb-10">
+        <SearchInput
+          value={productSearch}
+          onChange={setProductSearch}
+          placeholder="Search tools..."
+        />
+      </div>
+
       <div className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto">
-        {tools.map((tool) => {
-          return (
-            <div
-              key={tool.title}
-              className="bg-white shadow-md rounded-2xl p-6 flex flex-col justify-between hover:shadow-xl transition-shadow"
-            >
-              <div>
-                <h2 className="text-2xl font-semibold mb-2">{tool.title}</h2>
-                <p className="text-gray-500 mb-4">{tool.description}</p>
-              </div>
-              <button
-                onClick={() => navigate(tool.route)}
-                className="mt-auto inline-block text-sm text-white bg-blue-600 px-4 py-2 rounded-md hover:bg-blue-700 transition"
-              >
-                Open
-              </button>
+        {filteredTools.map((tool) => (
+          <div
+            key={tool.title}
+            className="bg-white shadow-md rounded-2xl p-6 flex flex-col justify-between hover:shadow-xl transition-shadow"
+          >
+            <div>
+              <h2 className="text-2xl font-semibold mb-2">{tool.title}</h2>
+              <p className="text-gray-500 mb-4">{tool.description}</p>
             </div>
-          );
-        })}
+            <button
+              onClick={() => navigate(tool.route)}
+              className="mt-auto inline-block text-sm text-white bg-blue-600 px-4 py-2 rounded-md hover:bg-blue-700 transition"
+            >
+              Open
+            </button>
+          </div>
+        ))}
       </div>
     </div>
   );
 };
+
 export default Application;

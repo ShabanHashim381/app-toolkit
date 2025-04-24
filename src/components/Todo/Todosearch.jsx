@@ -1,17 +1,20 @@
 import React from "react";
+import SearchInput from "../common/SearchInput";
 
-const SearchBar = ({ searchText, setSearchText }) => (
-  <div className="mb-4">
-    <div className="bg-white shadow-sm border border-gray-200 rounded px-4 py-3 flex items-center">
-      <input
-        type="text"
-        placeholder="Search tasks..."
+const TodoSearch = ({ searchText, setSearchText }) => {
+  const handleSearchChange = (text) => {
+    setSearchText(text);
+  };
+
+  return (
+    <div className="mb-4">
+      <SearchInput
         value={searchText}
-        onChange={(e) => setSearchText(e.target.value)}
-        className="w-full outline-none text-sm"
+        onChange={handleSearchChange}
+        placeholder="Search tasks..."
       />
     </div>
-  </div>
-);
+  );
+};
 
-export default SearchBar;
+export default TodoSearch;
