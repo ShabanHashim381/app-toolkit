@@ -280,7 +280,7 @@ const TodoInput = ({
                   onClick={() => setReminder(0, 17)}
                 >
                   <MdToday className="mr-2 text-gray-500" />
-                  Today
+                  Later Today
                 </button>
                 <button
                   className="flex items-center w-full px-3 py-2 hover:bg-gray-100 text-sm"
@@ -345,24 +345,43 @@ const TodoInput = ({
             </div>
 
             {repeatDropdownOpen && (
-              <div className="absolute left-0 top-8 bg-white border border-gray-200 rounded shadow-md w-44 z-30">
+              <div className="absolute left-0 top-8 bg-white border border-gray-200 rounded shadow-md w-48 z-30">
                 {[
-                  "Daily",
-                  "Weekdays",
-                  "Weekly",
-                  "Monthly",
-                  "Yearly",
-                  "Custom",
-                ].map((label) => (
+                  {
+                    label: "Daily",
+                    icon: <BsRepeat className="text-gray-500" />,
+                  },
+                  {
+                    label: "Weekdays",
+                    icon: <MdToday className="text-gray-500" />,
+                  },
+                  {
+                    label: "Weekly",
+                    icon: <LuCalendarDays className="text-gray-500" />,
+                  },
+                  {
+                    label: "Monthly",
+                    icon: <BsCalendar4Week className="text-gray-500" />,
+                  },
+                  {
+                    label: "Yearly",
+                    icon: <PiCalendarCheckDuotone className="text-gray-500" />,
+                  },
+                  {
+                    label: "Custom",
+                    icon: <GoBell className="text-gray-500" />,
+                  },
+                ].map(({ label, icon }) => (
                   <button
                     key={label}
-                    className="w-full px-4 py-2 text-sm hover:bg-gray-100 text-left"
+                    className="w-full px-4 py-2 text-sm hover:bg-gray-100 text-left flex items-center gap-2"
                     onClick={() => {
                       setRepeatValue(label);
                       setShowCustomDays(label === "Custom");
                       if (label !== "Custom") setRepeatDropdownOpen(false);
                     }}
                   >
+                    {icon}
                     {label}
                   </button>
                 ))}
