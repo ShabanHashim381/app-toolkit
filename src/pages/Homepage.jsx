@@ -29,7 +29,7 @@ const Homepage = () => {
       className="h-full flex items-center justify-center bg-gray-900 bg-cover bg-center"
       style={{
         backgroundImage:
-          "url('https://png.pngtree.com/thumb_back/fh260/background/20200714/pngtree-modern-double-color-futuristic-neon-background-image_351866.jpg')",
+          "url('https://plus.unsplash.com/premium_photo-1661877737564-3dfd7282efcb?q=80&w=1500&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')",
       }}
     >
       <h1 className="text-5xl font-bold text-white flex space-x-1 backdrop-blur-sm bg-black/40 px-4 py-2 rounded-2xl shadow-xl">

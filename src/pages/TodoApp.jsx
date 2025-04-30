@@ -9,7 +9,7 @@ import TodoItem from "../components/Todo/TodoItem";
 import DatePicker from "react-datepicker";
 import TodoSearch from "../components/Todo/TodoSearch";
 
-const TodoApp = () => {
+const TodoApp = ({ isSidebarOpen }) => {
   const [todoList, setTodoList] = useState(() => {
     const stored = localStorage.getItem("todos");
     return stored ? JSON.parse(stored) : [];
@@ -83,7 +83,11 @@ const TodoApp = () => {
 
   return (
     <div className="min-h-screen bg-[#1e1e2f] p-8 font-sans text-gray-200">
-      <div className="max-w-3xl mx-auto h-[90vh] flex flex-col">
+      <div
+        className={`h-[90vh] flex flex-col transition-all duration-300 ${
+          isSidebarOpen ? "max-w-3xl mx-auto" : "w-full mx-auto px-4"
+        }`}
+      >
         <TodoSearch setSearchText={setSearchText} />
 
         {/* Header & Sorting */}
@@ -122,7 +126,7 @@ const TodoApp = () => {
                     { key: "important", label: "⭐ Importance" },
                     { key: "dueDate", label: "📅 Due Date" },
                     { key: "alphabet", label: "🔤 Alphabetically" },
-                    { key: "createdAt", label: "🕓 Created At" },
+                    { key: "createdAt", label: "🕓 Creation Date" },
                   ].map((opt) => (
                     <button
                       key={opt.key}

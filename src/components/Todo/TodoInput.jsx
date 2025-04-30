@@ -22,8 +22,6 @@ const TodoInput = ({
   text,
   setText,
   inputText,
-  dueDate,
-  setDueDate,
   showCalendar,
   selectedDueDate,
   setTodoList,
@@ -40,19 +38,39 @@ const TodoInput = ({
   const [repeatValue, setRepeatValue] = useState(null);
   const [customRepeatDays, setCustomRepeatDays] = useState([]);
   const [showCustomDays, setShowCustomDays] = useState(false);
-
   const calendarRef = useRef(null);
   const reminderRef = useRef(null);
   const repeatRef = useRef(null);
   const today = new Date();
+  const formattedDueDate = () => {
+    if (!selectedDueDate) return null;
 
-  const formattedDueDate = dueDate
-    ? new Date(dueDate).toLocaleDateString("en-US", {
-        weekday: "short",
-        month: "short",
-        day: "numeric",
-      })
-    : null;
+    const todayDate = new Date();
+    const tomorrow = new Date();
+    tomorrow.setDate(todayDate.getDate() + 1);
+
+    const nextWeek = new Date();
+    nextWeek.setDate(todayDate.getDate() + 7);
+
+    const time = selectedDueDate.toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+
+    if (selectedDueDate.toDateString() === todayDate.toDateString())
+      return `Today ${time}`;
+    if (selectedDueDate.toDateString() === tomorrow.toDateString())
+      return `Tomorrow ${time}`;
+    if (selectedDueDate.toDateString() === nextWeek.toDateString())
+      return `Next Week ${time}`;
+    return selectedDueDate.toLocaleString("en-US", {
+      month: "short",
+      day: "numeric",
+      hour: "numeric",
+      minute: "numeric",
+      hour12: true,
+    });
+  };
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -73,10 +91,13 @@ const TodoInput = ({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const setRelativeDate = (days) => {
-    const targetDate = new Date();
-    targetDate.setDate(today.getDate() + days);
-    setDueDate(targetDate);
+  const setRelativeDate = (days, hours = 9, minutes = 0) => {
+    const date = new Date();
+    date.setDate(today.getDate() + days);
+    date.setHours(hours);
+    date.setMinutes(minutes);
+    date.setSeconds(0);
+    setSelectedDueDate(date);
     setDropdownOpen(false);
   };
 
@@ -181,9 +202,9 @@ const TodoInput = ({
           Add
         </button>
 
-        {dueDate && (
+        {selectedDueDate && (
           <div className="absolute bottom-[-20px] left-4 text-xs text-blue-600 bg-blue-100 px-2 py-0.5 rounded-full">
-            Due: {formattedDueDate}
+            {formattedDueDate}
           </div>
         )}
       </div>
@@ -200,9 +221,9 @@ const TodoInput = ({
                 title="Pick a due date"
                 onClick={() => setDropdownOpen((prev) => !prev)}
               />
-              {dueDate && (
+              {selectedDueDate && (
                 <span className="text-xs text-blue-600 bg-blue-100 px-2 py-0.5 rounded-full">
-                  {formattedDueDate}
+                  {formattedDueDate()}
                 </span>
               )}
             </div>
@@ -211,21 +232,21 @@ const TodoInput = ({
               <div className="absolute left-0 top-8 bg-white border border-gray-200 rounded shadow-md w-44 z-20">
                 <button
                   className="w-full text-left px-4 py-2 hover:bg-gray-100 text-sm flex items-center gap-2"
-                  onClick={() => setRelativeDate(0)}
+                  onClick={() => setRelativeDate(0, 17)}
                 >
                   <MdToday className="text-gray-500" />
                   Today
                 </button>
                 <button
                   className="w-full text-left px-4 py-2 hover:bg-gray-100 text-sm flex items-center gap-2"
-                  onClick={() => setRelativeDate(1)}
+                  onClick={() => setRelativeDate(1, 9)}
                 >
                   <MdOutlineDateRange className="text-gray-500" />
                   Tomorrow
                 </button>
                 <button
                   className="w-full text-left px-4 py-2 hover:bg-gray-100 text-sm flex items-center gap-2"
-                  onClick={() => setRelativeDate(7)}
+                  onClick={() => setRelativeDate(7, 9)}
                 >
                   <LuCalendarDays className="text-gray-500" />
                   Next Week
@@ -234,6 +255,7 @@ const TodoInput = ({
                   className="w-full text-left px-4 py-2 hover:bg-gray-100 text-sm flex items-center gap-2"
                   onClick={() => {
                     setShowCalendar(true);
+                    setReminderDropdownOpen(false);
                   }}
                 >
                   <BsCalendar4Week className="text-gray-500" />
@@ -246,7 +268,6 @@ const TodoInput = ({
                       selected={selectedDueDate}
                       onChange={(date) => {
                         setSelectedDueDate(date);
-                        setDueDate(date);
                         setShowCalendar(false);
                         setDropdownOpen(false);
                       }}

@@ -7,7 +7,7 @@ const Footer = () => {
       className="py-8 text-white"
       style={{
         backgroundImage:
-          "url('https://img.freepik.com/free-vector/gradient-abstract-wireframe-background_23-2149009903.jpg')",
+          "url('https://img.freepik.com/premium-photo/colorful-gradient-abstract-background-color-blur-effect-blurred-colors_1170211-5463.jpg?w=740')",
         backgroundSize: "cover",
         backgroundPosition: "center",
       }}
