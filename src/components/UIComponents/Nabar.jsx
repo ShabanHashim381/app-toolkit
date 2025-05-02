@@ -7,7 +7,7 @@ function Navbar() {
       className="bg-cover bg-center shadow-md"
       style={{
         backgroundImage:
-          "url('https://img.freepik.com/free-vector/gradient-abstract-wireframe-background_23-2149009903.jpg')",
+          "url('https://img.freepik.com/free-vector/abstract-background-design-black_53876-43543.jpg?t=st=1746118192~exp=1746121792~hmac=ba5e7dd7c915271c956e65be8675098ee09319990b9cb83e05ea15da4e1325e8&w=996')",
       }}
     >
       <nav className="container mx-auto py-4 flex items-center justify-between backdrop-brightness-90">

@@ -7,7 +7,7 @@ const Footer = () => {
       className="py-8 text-white"
       style={{
         backgroundImage:
-          "url('https://img.freepik.com/premium-photo/colorful-gradient-abstract-background-color-blur-effect-blurred-colors_1170211-5463.jpg?w=740')",
+          "url('https://img.freepik.com/premium-photo/dynamic-technology-abstract-background_608068-4045.jpg?w=1060')",
         backgroundSize: "cover",
         backgroundPosition: "center",
       }}
@@ -50,7 +50,7 @@ const Footer = () => {
 
         <div className="border-t border-gray-500 pt-4 px-6 flex flex-col sm:flex-row justify-between text-sm text-gray-200">
           <span>App.Toolkit. All rights reserved.</span>
-          <span className="text-right text-cyan-300">
+          <span className="text-right text-gray-200">
             Designed by Shaban Hashim 381
           </span>
         </div>

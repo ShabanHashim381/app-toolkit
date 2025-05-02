@@ -21,7 +21,7 @@ const Sidebar = () => {
       className="bg-cover bg-center shadow-md"
       style={{
         backgroundImage:
-          "url('https://img.freepik.com/free-vector/gradient-border-black-background_53876-118402.jpg?t=st=1746033268~exp=1746036868~hmac=b7dcb1934b522eb4b0317b906b570408058b4b627f7a179e5f86a41b541f5098&w=740')",
+          "url('https://img.freepik.com/free-vector/abstract-background-design-black_53876-43543.jpg?t=st=1746118192~exp=1746121792~hmac=ba5e7dd7c915271c956e65be8675098ee09319990b9cb83e05ea15da4e1325e8&w=996')",
         height: "100vh",
       }}
     >
