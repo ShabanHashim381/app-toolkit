@@ -31,7 +31,9 @@ function Routers() {
                 path="/todo"
                 element={
                   <TodoProvider>
-                    <TodoApp />
+                    <div className="min-h-screen bg-gray-100 text-gray-900 p-4">
+                      <TodoApp />
+                    </div>
                   </TodoProvider>
                 }
               />

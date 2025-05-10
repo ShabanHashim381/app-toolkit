@@ -7,7 +7,7 @@ import { HiMiniArrowsUpDown } from "react-icons/hi2";
 import TodoHeader from "../components/Todo/TodoHeader";
 import TodoItem from "../components/Todo/TodoItem";
 import DatePicker from "react-datepicker";
-import TodoSearch from "../components/Todo/TodoSearch";
+import TodoNavbar from "../components/Todo/TodoNavbar";
 
 const TodoApp = ({ isSidebarOpen }) => {
   const [todoList, setTodoList] = useState(() => {
@@ -23,6 +23,28 @@ const TodoApp = ({ isSidebarOpen }) => {
   const [selectedDueDate, setSelectedDueDate] = useState(null);
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [isSortedOldestFirst, setIsSortedOldestFirst] = useState(false);
+  const [selectedTask, setSelectedTask] = useState(null);
+  const [showSidebar, setShowSidebar] = useState(false);
+  const [confirmDelete, setConfirmDelete] = useState(false);
+
+  const handleTaskClick = (task) => {
+    if (selectedTask?.id === task.id) {
+      setSelectedTask(null);
+      setShowSidebar(false);
+    } else {
+      setSelectedTask(task);
+      setShowSidebar(true);
+    }
+  };
+
+  const confirmAndRemove = () => {
+    if (selectedTask) {
+      handleRemoveTodo(selectedTask.id);
+      setSelectedTask(null);
+      setShowSidebar(false);
+      setConfirmDelete(false);
+    }
+  };
 
   useEffect(() => {
     localStorage.setItem("todos", JSON.stringify(todoList));
@@ -82,33 +104,30 @@ const TodoApp = ({ isSidebarOpen }) => {
   const completedTodos = filteredTodos.filter((todo) => todo.completed);
 
   return (
-    <div className="min-h-screen bg-[#1e1e2f] p-8 font-sans text-gray-200">
+    <div className="h-full bg-gray-100 font-sans text-black">
       <div
         className={`h-[90vh] flex flex-col transition-all duration-300 ${
           isSidebarOpen ? "max-w-3xl mx-auto" : "w-full mx-auto px-4"
         }`}
       >
-        <TodoSearch setSearchText={setSearchText} />
+        <TodoNavbar setSearchText={setSearchText} />
 
-        {/* Header & Sorting */}
+        {/* Header & Sort */}
         <div className="mb-6">
           <div className="flex justify-between items-center mt-3">
             <TodoHeader isGridView={isGridView} setIsGridView={setIsGridView} />
 
-            <div className="relative text-sm text-gray-300">
+            <div className="relative text-sm text-gray-800">
               <div className="flex items-center gap-4">
-                <div className="form-check form-switch">
-                  <input
-                    className="form-check-input"
-                    type="checkbox"
-                    role="switch"
-                    checked={isSortedOldestFirst}
-                    onChange={handleToggleSortOrder}
-                  />
-                </div>
+                <input
+                  type="checkbox"
+                  role="switch"
+                  checked={isSortedOldestFirst}
+                  onChange={handleToggleSortOrder}
+                />
                 <button
                   onClick={() => setShowSortDropdown((prev) => !prev)}
-                  className="text-gray-300 hover:text-white border border-gray-600 px-3 py-1 rounded text-sm flex items-center gap-2"
+                  className="text-black border border-gray-400 px-3 py-1 rounded text-sm flex items-center gap-2"
                 >
                   {showSortDropdown ? (
                     <ChevronUp className="w-4 h-4" />
@@ -121,7 +140,7 @@ const TodoApp = ({ isSidebarOpen }) => {
               </div>
 
               {showSortDropdown && (
-                <div className="absolute right-0 mt-2 w-40 bg-[#2a2a3d] border border-gray-600 rounded shadow-md z-10">
+                <div className="absolute right-0 mt-2 w-40 bg-white border border-gray-400 rounded shadow-md z-10">
                   {[
                     { key: "important", label: "⭐ Importance" },
                     { key: "dueDate", label: "📅 Due Date" },
@@ -134,10 +153,10 @@ const TodoApp = ({ isSidebarOpen }) => {
                         setSortOption(opt.key);
                         setShowSortDropdown(false);
                       }}
-                      className={`w-full text-left px-4 py-2 text-sm hover:bg-[#3a3a4f] ${
+                      className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-200 ${
                         sortOption === opt.key
-                          ? "bg-[#3a3a4f] font-medium text-white"
-                          : "text-gray-300"
+                          ? "bg-gray-200 font-medium text-black"
+                          : "text-black"
                       }`}
                     >
                       {opt.label}
@@ -148,14 +167,28 @@ const TodoApp = ({ isSidebarOpen }) => {
             </div>
           </div>
 
-          <div className="flex flex-col items-start text-sm text-gray-400 mt-1">
+          <div className="flex flex-col items-start text-sm text-black mt-1">
             <span>{format(new Date(), "EEEE")}</span>
             <span>{format(new Date(), "MMMM d")}</span>
           </div>
         </div>
 
-        {/* Input */}
+        {/* Input + DatePicker */}
         <div className="mb-4 relative">
+          {sortOption && (
+            <div className="absolute right-0 -top-7 bg-blue-100 text-blue-800 text-xs px-3 py-1 shadow-sm border border-blue-300">
+              Sorted by
+              {
+                {
+                  important: " Importance",
+                  dueDate: " Due Date",
+                  alphabet: " Alphabetically",
+                  createdAt: " Creation Date",
+                }[sortOption]
+              }
+            </div>
+          )}
+
           <TodoInput
             text={inputText}
             setText={setInputText}
@@ -192,13 +225,15 @@ const TodoApp = ({ isSidebarOpen }) => {
                 toggleFavorite={handleToggleFavorite}
                 removeTodo={handleRemoveTodo}
                 sortOption={sortOption}
+                onTaskClick={handleTaskClick}
+                selectedTask={selectedTask}
               />
             ))}
           </div>
 
           {completedTodos.length > 0 && (
             <>
-              <div className="text-sm font-semibold text-white pt-4 border-t border-gray-600">
+              <div className="text-sm font-semibold text-black pt-4 border-t border-gray-400">
                 Completed {completedTodos.length}
               </div>
               <div
@@ -221,6 +256,75 @@ const TodoApp = ({ isSidebarOpen }) => {
           )}
         </div>
       </div>
+
+      {/* Sidebar Task Details */}
+      {showSidebar && selectedTask && (
+        <div className="fixed top-0 right-0 h-full w-80 bg-white shadow-xl border-l z-50 p-4 overflow-y-auto transition-transform">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-lg font-bold">Task Details</h2>
+            <button
+              className="text-gray-600 hover:text-red-500"
+              onClick={() => {
+                setShowSidebar(false);
+                setSelectedTask(null);
+              }}
+            >
+              ✕
+            </button>
+          </div>
+
+          <div className="space-y-2 text-sm">
+            <div>
+              <span className="font-semibold">Text:</span> {selectedTask.text}
+            </div>
+            {selectedTask.dueDate && (
+              <div>
+                <span className="font-semibold">Due Date:</span>{" "}
+                {format(new Date(selectedTask.dueDate), "MMM d, yyyy")}
+              </div>
+            )}
+            <div>
+              <span className="font-semibold">Created At:</span>{" "}
+              {format(new Date(selectedTask.createdAt), "MMM d, yyyy")}
+            </div>
+            <div>
+              <span className="font-semibold">Status:</span>{" "}
+              {selectedTask.completed ? "Completed" : "Incomplete"}
+            </div>
+          </div>
+
+          <button
+            onClick={() => setConfirmDelete(true)}
+            className="mt-4 px-4 py-2 text-sm bg-red-500 text-white rounded"
+          >
+            Delete Task
+          </button>
+
+          {confirmDelete && (
+            <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-[100]">
+              <div className="bg-white p-6 rounded-xl shadow-lg w-80 text-center">
+                <p className="text-gray-800 text-sm mb-4">
+                  Are you sure you want to delete this task?
+                </p>
+                <div className="flex justify-center gap-4">
+                  <button
+                    onClick={confirmAndRemove}
+                    className="px-4 py-1.5 text-sm bg-red-500 text-white rounded hover:bg-red-600"
+                  >
+                    Delete
+                  </button>
+                  <button
+                    onClick={() => setConfirmDelete(false)}
+                    className="px-4 py-1.5 text-sm bg-gray-300 text-black rounded hover:bg-gray-400"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 };

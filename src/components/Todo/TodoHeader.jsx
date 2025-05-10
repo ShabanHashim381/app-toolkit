@@ -1,6 +1,7 @@
 import React from "react";
 import { IoSunnyOutline } from "react-icons/io5";
-import { FaList, FaTh } from "react-icons/fa";
+import { VscListSelection } from "react-icons/vsc";
+import { BsFillGridFill } from "react-icons/bs";
 
 const TodoHeader = ({ isGridView, setIsGridView }) => (
   <div className="flex justify-between items-center mt-3">
@@ -11,22 +12,22 @@ const TodoHeader = ({ isGridView, setIsGridView }) => (
       </div>
       <div className="flex gap-4 text-sm text-gray-500">
         <button
-          onClick={() => setIsGridView(false)}
-          className={`flex items-center gap-2 ${
-            !isGridView ? "font-semibold text-blue-600" : "text-gray-500"
-          }`}
-        >
-          <FaList className="w-4 h-4" />
-          List View
-        </button>
-        <button
           onClick={() => setIsGridView(true)}
           className={`flex items-center gap-2 ${
             isGridView ? "font-semibold text-blue-600" : "text-gray-500"
           }`}
         >
-          <FaTh className="w-4 h-4" />
+          <BsFillGridFill className="w-4 h-4" />
           Grid View
+        </button>
+        <button
+          onClick={() => setIsGridView(false)}
+          className={`flex items-center gap-2 ${
+            !isGridView ? "font-semibold text-blue-600" : "text-gray-500"
+          }`}
+        >
+          <VscListSelection className="w-4 h-4" />
+          List View
         </button>
       </div>
     </div>
