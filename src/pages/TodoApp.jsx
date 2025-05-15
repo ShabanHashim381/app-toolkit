@@ -2,12 +2,10 @@ import React, { useEffect, useState } from "react";
 import TodoInput from "../components/Todo/TodoInput";
 import "react-datepicker/dist/react-datepicker.css";
 import { format } from "date-fns";
-import { ChevronDown, ChevronUp } from "lucide-react";
-import { HiMiniArrowsUpDown } from "react-icons/hi2";
 import TodoHeader from "../components/Todo/TodoHeader";
 import TodoItem from "../components/Todo/TodoItem";
-import DatePicker from "react-datepicker";
 import TodoNavbar from "../components/Todo/TodoNavbar";
+import SortDropdown from "../components/Todo/TodoSortdropdown";
 
 const TodoApp = ({ isSidebarOpen }) => {
   const [todoList, setTodoList] = useState(() => {
@@ -26,6 +24,7 @@ const TodoApp = ({ isSidebarOpen }) => {
   const [selectedTask, setSelectedTask] = useState(null);
   const [showSidebar, setShowSidebar] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
 
   const handleTaskClick = (task) => {
     if (selectedTask?.id === task.id) {
@@ -99,71 +98,48 @@ const TodoApp = ({ isSidebarOpen }) => {
     return filtered;
   };
 
+  const handleSaveChanges = () => {
+    setTodoList((prevTodos) =>
+      prevTodos.map((todo) => {
+        if (todo.id === selectedTask.id) {
+          return { ...todo, text: selectedTask.text };
+        }
+        return todo;
+      })
+    );
+    setIsEditing(false);
+  };
+
   const filteredTodos = getFilteredTodos();
   const activeTodos = filteredTodos.filter((todo) => !todo.completed);
   const completedTodos = filteredTodos.filter((todo) => todo.completed);
 
   return (
     <div className="h-full bg-gray-100 font-sans text-black">
+      <TodoNavbar setSearchText={setSearchText} />
       <div
         className={`h-[90vh] flex flex-col transition-all duration-300 ${
           isSidebarOpen ? "max-w-3xl mx-auto" : "w-full mx-auto px-4"
         }`}
       >
-        <TodoNavbar setSearchText={setSearchText} />
-
         {/* Header & Sort */}
         <div className="mb-6">
           <div className="flex justify-between items-center mt-3">
             <TodoHeader isGridView={isGridView} setIsGridView={setIsGridView} />
 
-            <div className="relative text-sm text-gray-800">
-              <div className="flex items-center gap-4">
-                <input
-                  type="checkbox"
-                  role="switch"
-                  checked={isSortedOldestFirst}
-                  onChange={handleToggleSortOrder}
-                />
-                <button
-                  onClick={() => setShowSortDropdown((prev) => !prev)}
-                  className="text-black border border-gray-400 px-3 py-1 rounded text-sm flex items-center gap-2"
-                >
-                  {showSortDropdown ? (
-                    <ChevronUp className="w-4 h-4" />
-                  ) : (
-                    <ChevronDown className="w-4 h-4" />
-                  )}
-                  <HiMiniArrowsUpDown className="w-4 h-4" />
-                  <span>Sort by</span>
-                </button>
-              </div>
-
-              {showSortDropdown && (
-                <div className="absolute right-0 mt-2 w-40 bg-white border border-gray-400 rounded shadow-md z-10">
-                  {[
-                    { key: "important", label: "⭐ Importance" },
-                    { key: "dueDate", label: "📅 Due Date" },
-                    { key: "alphabet", label: "🔤 Alphabetically" },
-                    { key: "createdAt", label: "🕓 Creation Date" },
-                  ].map((opt) => (
-                    <button
-                      key={opt.key}
-                      onClick={() => {
-                        setSortOption(opt.key);
-                        setShowSortDropdown(false);
-                      }}
-                      className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-200 ${
-                        sortOption === opt.key
-                          ? "bg-gray-200 font-medium text-black"
-                          : "text-black"
-                      }`}
-                    >
-                      {opt.label}
-                    </button>
-                  ))}
-                </div>
-              )}
+            <div className="flex items-center gap-4">
+              <input
+                type="checkbox"
+                role="switch"
+                checked={isSortedOldestFirst}
+                onChange={handleToggleSortOrder}
+              />
+              <SortDropdown
+                sortOption={sortOption}
+                setSortOption={setSortOption}
+                showSortDropdown={showSortDropdown}
+                setShowSortDropdown={setShowSortDropdown}
+              />
             </div>
           </div>
 
@@ -199,17 +175,8 @@ const TodoApp = ({ isSidebarOpen }) => {
             setInputText={setInputText}
             setSelectedDueDate={setSelectedDueDate}
             setShowDatePicker={setShowDatePicker}
+            showDatePicker={showDatePicker}
           />
-          {showDatePicker && (
-            <div className="absolute top-16 left-0 z-20">
-              <DatePicker
-                selected={selectedDueDate}
-                onChange={(date) => setSelectedDueDate(date)}
-                inline
-                minDate={new Date()}
-              />
-            </div>
-          )}
         </div>
 
         {/* Todo List */}
@@ -272,34 +239,65 @@ const TodoApp = ({ isSidebarOpen }) => {
               ✕
             </button>
           </div>
-
-          <div className="space-y-2 text-sm">
+          {isEditing ? (
             <div>
-              <span className="font-semibold">Text:</span> {selectedTask.text}
+              <input
+                type="text"
+                value={selectedTask.text}
+                onChange={(e) => {
+                  setSelectedTask({ ...selectedTask, text: e.target.value });
+                }}
+                className="w-full p-2 border border-gray-300 rounded"
+              />
+              <button
+                onClick={handleSaveChanges}
+                className="mt-4 px-4 py-2 text-sm bg-blue-500 text-white rounded"
+              >
+                Save Changes
+              </button>
+
+              <button
+                onClick={() => setIsEditing(false)}
+                className="mt-4 ml-4 px-4 py-2 text-sm bg-gray-300 text-black rounded"
+              >
+                Cancel
+              </button>
             </div>
-            {selectedTask.dueDate && (
+          ) : (
+            <div className="space-y-2 text-sm">
               <div>
-                <span className="font-semibold">Due Date:</span>{" "}
-                {format(new Date(selectedTask.dueDate), "MMM d, yyyy")}
+                <span className="font-semibold">Text:</span> {selectedTask.text}
               </div>
-            )}
-            <div>
-              <span className="font-semibold">Created At:</span>{" "}
-              {format(new Date(selectedTask.createdAt), "MMM d, yyyy")}
+              {selectedTask.dueDate && (
+                <div>
+                  <span className="font-semibold">Due Date:</span>{" "}
+                  {format(new Date(selectedTask.dueDate), "MMM d, yyyy")}
+                </div>
+              )}
+              <div>
+                <span className="font-semibold">Created At:</span>{" "}
+                {format(new Date(selectedTask.createdAt), "MMM d, yyyy")}
+              </div>
+              <div>
+                <span className="font-semibold">Status:</span>{" "}
+                {selectedTask.completed ? "Completed" : "Incomplete"}
+              </div>
             </div>
-            <div>
-              <span className="font-semibold">Status:</span>{" "}
-              {selectedTask.completed ? "Completed" : "Incomplete"}
-            </div>
+          )}
+          <div className="flex justify-end gap-4 mt-4">
+            <button
+              onClick={() => setConfirmDelete(true)}
+              className="px-4 py-2 text-sm bg-red-500 text-white rounded"
+            >
+              Delete Task
+            </button>
+            <button
+              onClick={() => setIsEditing(true)}
+              className="px-4 py-2 text-sm bg-blue-500 text-white rounded"
+            >
+              Edit Task
+            </button>
           </div>
-
-          <button
-            onClick={() => setConfirmDelete(true)}
-            className="mt-4 px-4 py-2 text-sm bg-red-500 text-white rounded"
-          >
-            Delete Task
-          </button>
-
           {confirmDelete && (
             <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-[100]">
               <div className="bg-white p-6 rounded-xl shadow-lg w-80 text-center">

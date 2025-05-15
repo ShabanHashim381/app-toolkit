@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { RiMenu3Line, RiCloseLine } from "react-icons/ri";
 import { SiHomepage } from "react-icons/si";
@@ -8,13 +8,20 @@ const SidebarItem = ({ icon, label, to }) => (
   <Link to={to}>
     <div className="flex items-center gap-4 px-4 py-3 rounded-xl hover:bg-blue-900/40 hover:text-cyan-300 transition-colors duration-200 text-slate-200 drop-shadow-sm">
       {icon}
-      <span className="text-sm font-medium">{label}</span>
+      {label && <span className="text-sm font-medium">{label}</span>}
     </div>
   </Link>
 );
 
 const Sidebar = () => {
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(() => {
+    const savedState = localStorage.getItem("sidebarOpen");
+    return savedState ? JSON.parse(savedState) : false;
+  });
+
+  useEffect(() => {
+    localStorage.setItem("sidebarOpen", JSON.stringify(isOpen));
+  }, [isOpen]);
 
   return (
     <div
@@ -40,7 +47,6 @@ const Sidebar = () => {
               />
             </div>
 
-            {/* Menu Items */}
             <nav className="space-y-3">
               <SidebarItem
                 icon={<SiHomepage size={20} />}
@@ -61,12 +67,21 @@ const Sidebar = () => {
           </div>
         </div>
       ) : (
-        <div className="w-16 bg-black/60 backdrop-blur-sm h-full flex items-start justify-center p-4 shadow-lg">
+        <div className="w-16 bg-black/60 backdrop-blur-sm h-full flex flex-col items-center p-4 shadow-lg space-y-6">
           <RiMenu3Line
             size={26}
             className="text-white cursor-pointer hover:text-cyan-300 transition-colors"
             onClick={() => setIsOpen(true)}
           />
+
+          <div className="flex flex-col items-center space-y-6 mt-6">
+            <SidebarItem icon={<SiHomepage size={20} />} label="" to="/" />
+            <SidebarItem
+              icon={<FiGrid size={20} />}
+              label=""
+              to="/application"
+            />
+          </div>
         </div>
       )}
     </div>

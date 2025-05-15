@@ -22,13 +22,13 @@ const TodoInput = ({
   text,
   setText,
   inputText,
-  showCalendar,
   selectedDueDate,
   setTodoList,
   setInputText,
   setSelectedDueDate,
   setShowDatePicker,
   setShowCalendar,
+  showDatePicker,
 }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [reminderDropdownOpen, setReminderDropdownOpen] = useState(false);
@@ -71,7 +71,6 @@ const TodoInput = ({
       hour12: true,
     });
   };
-
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (calendarRef.current && !calendarRef.current.contains(event.target)) {
@@ -201,12 +200,6 @@ const TodoInput = ({
         >
           Add
         </button>
-
-        {selectedDueDate && (
-          <div className="absolute bottom-[-20px] left-4 text-xs text-blue-600 bg-blue-100 px-2 py-0.5 rounded-full">
-            {formattedDueDate}
-          </div>
-        )}
       </div>
 
       <div className="border-t border-gray-400"></div>
@@ -254,7 +247,7 @@ const TodoInput = ({
                 <button
                   className="w-full text-left px-4 py-2 hover:bg-gray-100 text-sm flex items-center gap-2"
                   onClick={() => {
-                    setShowCalendar(true);
+                    setShowDatePicker(true);
                     setReminderDropdownOpen(false);
                   }}
                 >
@@ -262,14 +255,13 @@ const TodoInput = ({
                   Pick Date
                 </button>
 
-                {showCalendar && (
+                {showDatePicker && (
                   <div className="px-4 py-2">
                     <DatePicker
                       selected={selectedDueDate}
                       onChange={(date) => {
                         setSelectedDueDate(date);
-                        setShowCalendar(false);
-                        setDropdownOpen(false);
+                        setShowDatePicker(false);
                       }}
                       inline
                     />
